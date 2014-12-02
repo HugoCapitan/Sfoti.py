@@ -10,6 +10,17 @@ class UserCreationEmailForm(UserCreationForm):
 		model = User
 		fields = ('username', 'email')
 
+
+	def clean_email(self):
+		email = self.cleaned_data.get('email')
+	 	try:
+	 		User.objects.get(email = email)
+	 		raise forms.ValidationError('Email Repetido')
+	 	except User.DoesNotExist:
+	 		return email
+
+			
+
 class EmailAuthenticationForm(forms.Form):
 	email = forms.EmailField();
 	password = forms.CharField(label='password', widget=forms.PasswordInput)
