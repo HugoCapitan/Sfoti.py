@@ -1,1 +1,5 @@
-tarea.txt
+Clase modelos, vistas, formularios:
+	Validar en la creacion de usuarios que el Email no exista --Done--
+	Loguear el usuario despues de crearlo	
+	Redireccionar al home despues de loguear
+	Crear userprofiles(opcional)

@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate 
+from django.contrib.auth import authenticate
 
 class UserCreationEmailForm(UserCreationForm):
 	email = forms.EmailField()
@@ -19,7 +19,16 @@ class UserCreationEmailForm(UserCreationForm):
 	 	except User.DoesNotExist:
 	 		return email
 
-			
+	def get_authentication_data(self):
+		authentication_data = {'email': self.cleaned_data.get('email'), 'password': self.cleaned_data.get('password1')}
+		return authentication_data
+
+
+	# def get_email(self):
+	# 	return self.cleaned_data.get('email')
+
+	# def get_password(self):
+	# 	return self.cleaned_data.get('password1')
 
 class EmailAuthenticationForm(forms.Form):
 	email = forms.EmailField();
