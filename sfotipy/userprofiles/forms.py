@@ -27,7 +27,7 @@ class EmailAuthenticationForm(forms.Form):
 		if self.user_cache is None:
 			raise forms.ValidationError('Usuario incorrecto')
 		elif not self.user_cache.is_active:
-			raise forms,ValidationError('Usuario inactivo')
+			raise forms.ValidationError('Usuario inactivo')
 
 		return self.cleaned_data
 

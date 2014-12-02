@@ -1,5 +1,8 @@
+from django.contrib.auth import login
 from django.shortcuts import render
+
 from .forms import UserCreationEmailForm, EmailAuthenticationForm
+
 
 def signup(request):
 	form = UserCreationEmailForm(request.POST or None)
@@ -13,6 +16,6 @@ def signin(request):
 	form = EmailAuthenticationForm(request.POST or None)
 
 	if form.is_valid():
-		login(request, form.form.get_user())
+		login(request, form.get_user())
 
 	return render(request, 'signin.html', {'form': form})
