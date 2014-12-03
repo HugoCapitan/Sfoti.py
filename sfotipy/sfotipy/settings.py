@@ -28,8 +28,16 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
+
+TEMPLATE_CONTEXT_PROCESSORS = TCP +(
+    "django.core.context_processors.request",
+)
+
+GRAPPELLI_ADMIN_TITLE = 'Sfotipy'
 
 INSTALLED_APPS = (
+    'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,6 +48,8 @@ INSTALLED_APPS = (
     'tracks',
     'artists',
     'userprofiles',
+    'mockups',
+    'django_extensions',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -49,7 +59,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 )
 
 ROOT_URLCONF = 'sfotipy.urls'
@@ -70,7 +80,7 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es'
 
 TIME_ZONE = 'UTC'
 
@@ -86,8 +96,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+MEDIA_ROOT = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-2] + ['media'])
+MEDIA_URL = '/media/'
 
 # Backends
-AUTHENTICATION_BACKENDS = (
-    'userprofiles.backends.EmailBackend',
-)
+# AUTHENTICATION_BACKENDS = (
+#     'userprofiles.backends.EmailBackend',
+# )

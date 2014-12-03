@@ -1,0 +1,88 @@
+@font-face {
+	font-family: 'icomoon';
+	src:url('fonts/icomoon.eot?-91mzbx');
+	src:url('fonts/icomoon.eot?#iefix-91mzbx') format('embedded-opentype'),
+		url('fonts/icomoon.woff?-91mzbx') format('woff'),
+		url('fonts/icomoon.ttf?-91mzbx') format('truetype'),
+		url('fonts/icomoon.svg?-91mzbx#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+	font-family: 'icomoon';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-headphones:before {
+	content: "\e600";
+	font-size: 2em;
+}
+.icon-cool:before {
+	content: "\e601";
+	font-size: 2em
+}
+a{
+	text-decoration: none;
+}
+body {
+	background: #D3D3D3;
+	font-family: sans-serif;
+	font-size: 18px;
+}
+header {
+	margin: 0;
+}
+header h1{
+	margin: 1em 0 0 2em;
+	padding: 0;
+}
+p {
+	margin: 0;
+}
+section.usuario {
+	background: #FFF;
+	display: relative;
+	margin: 10% 20% 0.5em 20%;
+	padding: 3em 1em;
+	text-align: center;
+}
+section.enlace {
+	display: relative;
+	margin: 0 20% 0.5em 20%;
+	padding: 0;
+	text-align: center;
+}
+div.item {
+	background: #FFF;
+	display: inline-block;
+	float: left;
+	padding: 1em 0;
+	width: 49.5%;
+}
+div.item:first-child {
+	margin-right: 1%;
+}
+div.item a {
+	-webkit-transition: .3s;
+	color: #CCC;
+}
+div.item a:hover {
+	-webkit-transition: .3s;
+	color: #4F67A5;
+}
+section.usuario p:first-child {
+	margin: 0 0 1em 0;
+}
+section.usuario p:last-child {
+	margin: 1em 0 0 0;
+}

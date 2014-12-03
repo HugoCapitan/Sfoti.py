@@ -3,13 +3,19 @@
 <head>
 	<meta charset="utf-8" />
 	<title>Login</title>
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href="{% static "welcome.css" %}">
+	<link rel="stylesheet" type="text/css" href="{% static "signup.css" %}">
 </head>
 <body>
-	<section>
+	<header>
+		<h1>Sfotipy</h1>
+	</header>
+	<section class="sign_form" >
 		<form action="" method="post">
 			{% csrf_token %}
 			{{form.as_p}}
-			<input type="submit" value="Submit" />
+			<input class="enviar" type="submit" value="Enviar" />
 		</form>
 	</section>
 </body>

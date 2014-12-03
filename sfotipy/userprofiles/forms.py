@@ -20,19 +20,13 @@ class UserCreationEmailForm(UserCreationForm):
 	 		return email
 
 	def get_authentication_data(self):
-		authentication_data = {'email': self.cleaned_data.get('email'), 'password': self.cleaned_data.get('password1')}
+		authentication_data = {'username': self.cleaned_data.get('username'), 'email': self.cleaned_data.get('email'), 'password': self.cleaned_data.get('password1')}
 		return authentication_data
 
 
-	# def get_email(self):
-	# 	return self.cleaned_data.get('email')
-
-	# def get_password(self):
-	# 	return self.cleaned_data.get('password1')
-
 class EmailAuthenticationForm(forms.Form):
 	email = forms.EmailField();
-	password = forms.CharField(label='password', widget=forms.PasswordInput)
+	password = forms.CharField(label='Password', widget=forms.PasswordInput)
 
 	def __init__(self, *args, **kwargs):
 		self.user_cache = None

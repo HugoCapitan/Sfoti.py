@@ -3,3 +3,6 @@ Clase modelos, vistas, formularios:
 	Loguear el usuario despues de crearlo	
 	Redireccionar al home despues de loguear
 	Crear userprofiles(opcional)
+
+Django Revolutions
+	checar comandos de django_extensions

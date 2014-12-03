@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Bienvenido a Sofotipy</title>
+	{% load staticfiles %}
+	<link rel="stylesheet" href="{% static "welcome.css" %}">
+</head>
+<body>
+	<header>
+		<h1>Sfotipy</h1>
+	</header>
+	<section class="usuario">
+		<p id="primero">Bienvenido <strong>{{ data.username }}</strong></p>
+		<p>Tu usuario ha sido registrado exitosamente con el email:</p>
+		<p><strong> {{data.email}} </strong></p>
+	</section>
+	<section class="enlace">
+		<div class="item">
+			<a href="#">
+				<p>
+					Ver canciones
+				</p>
+				<p class="icon-headphones"></p>
+			</a>
+		</div>
+		<div class="item">
+			<a href="#">
+				<p>
+					Ver artistas
+				</p>
+				<p class="icon-cool"></p>
+			</a>
+		</div>
+	</section>
+</body>
+</html>
