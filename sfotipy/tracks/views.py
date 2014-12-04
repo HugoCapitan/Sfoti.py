@@ -1,15 +1,14 @@
-import json
+# import json
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, Http404
 
 from .models import Track
 
+@login_required
 def track_view(request, title):
-
-	# try: 
-	# 	track = Track.objects.get(title=title)
-	# except Track.DoesNotExist:
-	# 	raise Http404
+	# Debugear el codigo con ipdb
+	# Import ipdb; ipdb.set_trace()
 
 	track = get_object_or_404(Track, title=title)
 	bio = track.artist.biography
@@ -24,8 +23,7 @@ def track_view(request, title):
 		}
 	}
 
-	json_data = json.dumps(data)
+	# json_data = json.dumps(data)
+	# return HttpResponse(json_data, content_type='application/json')
 
-	return HttpResponse(json_data, content_type='application/json')
-
-	# return render(request, 'track.html', {'track': track, 'bio':bio})
+	return render(request, 'track.html', {'track': track, 'bio':bio})
