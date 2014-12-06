@@ -20,11 +20,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = '9z5xr%)9dbt5s24ci*6(*uq+y60%l2$9w*$daph4p-rl9gl(%&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -51,6 +51,8 @@ INSTALLED_APPS = (
     'userprofiles',
     'mockups',
     'django_extensions',
+    'rest_framework',
+    
 )
 
 MIDDLEWARE_CLASSES = (
@@ -98,7 +100,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.CachedStaticFilesStorage'
+
 MEDIA_ROOT = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-2] + ['media'])
+STATIC_ROOT = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-2] + ['content'])
+
 MEDIA_URL = '/media/'
 
 # Backends

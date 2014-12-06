@@ -1,9 +1,8 @@
 # import json
+from .models import Track
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, Http404
-
-from .models import Track
 
 @login_required
 def track_view(request, title):
@@ -27,3 +26,12 @@ def track_view(request, title):
 	# return HttpResponse(json_data, content_type='application/json')
 
 	return render(request, 'track.html', {'track': track, 'bio':bio})
+
+
+from rest_framework import viewsets
+from serializers import TrackSerializer
+
+class TrackViewSet(viewsets.ModelViewSet):
+	queryset = Track.objects.all()
+	serializer_class = TrackSerializer
+	model = Track

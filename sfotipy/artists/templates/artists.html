@@ -1,0 +1,16 @@
+{% load static from staticfiles %}
+
+{% if fav_artist %}
+Pagina de artista:
+<strong>
+{{fav_artist.first_name}} {{fav_artist.last_name}}
+</strong>
+{% else %}
+<strong>Listado de artistas</strong> 
+{% for a in artists %}
+<p> {{a}} </p>
+{%endfor%}
+
+{% endif %}
+
+<img src="{% static "at.jpg" %}">

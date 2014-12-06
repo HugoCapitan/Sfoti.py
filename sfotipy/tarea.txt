@@ -6,3 +6,15 @@ Clase modelos, vistas, formularios:
 
 Django Revolutions
 	checar comandos de django_extensions
+
+
+Bono Manejando archivos en amazon S3
+
+	pip install django-storages
+	pip install python-boto
+	pip install boto
+	DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+	AWS_ACCES_KEY_ID = ..
+	AWS_SECRET_ACCES_KEY = ..
+	STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+
