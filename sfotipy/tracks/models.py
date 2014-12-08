@@ -2,7 +2,7 @@ from django.db import models
 from artists.models import Artist
 from albums.models import Album
 
-
+# Git
 class Track(models.Model):
 	title = models.CharField(max_length=255)
 	order = models.PositiveIntegerField()
@@ -12,6 +12,8 @@ class Track(models.Model):
 
 	def get_absolute_url(self):
 		return '/tracks/%s/' % self.title
+
+		#Probando git y github en ATOM
 
 	def player(self):
 		return """

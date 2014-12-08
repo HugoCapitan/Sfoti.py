@@ -19,6 +19,5 @@ from .serializers import ArtistSerializer
 class ArtistViewSet(viewsets.ModelViewSet):
 	queryset = Artist.objects.all()
 	serializer_class = ArtistSerializer
-	filter_fields = ('id', ) 
-	paginate_by = 1
+	filter_fields = ('id', )
 	model = Artist
