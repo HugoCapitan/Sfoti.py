@@ -55,10 +55,24 @@ INSTALLED_APPS = (
     'mockups',
     'django_extensions',
     'rest_framework',
+    'redis_cache',
     
 )
 
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': 'localhost:6379',
+        'OPTIONS': {
+            'DB': 1,
+            # 'PASSWORD': 'yadayada',
+            'PARSER_CLASS': 'redis.connection.HiredisParser'
+        }
+    }
+}
+
 MIDDLEWARE_CLASSES = (
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -66,8 +80,11 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'sfotipy.middlewares.PaisMiddleware'
+    # 'sfotipy.middlewares.PaisMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 )
+
+CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
 
 ROOT_URLCONF = 'sfotipy.urls'
 
@@ -103,17 +120,14 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'redis_cache.RedisCache',
-#         'LOCATION': 'localhost:6379',
-#         'OPTIONS': {
-#             'DB': 1,
-#             # 'PASSWORD': 'yadayada',
-#             'PARSER_CLASS': 'redis.connection.HiredisParser'
-#         }
-#     }
-# }
+
+
+# Para no darle TAN duro a la db
+# SESSION_ENGINE = 'django.contrib.sessions.backends.cache_db'
+
+# Aun mas -- si no les importa que se pierda la sesion
+# Sin problemas usando redis
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.CachedStaticFilesStorage'
 
