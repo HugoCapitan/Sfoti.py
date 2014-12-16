@@ -1,0 +1,63 @@
+Caching
+
+Caching  es guardar información para que a futuro sea más fácil de acceder por medio del manejo de memoria. 
+
+En web, se manejan servidores que almacenan datos procesados para aumentar la velocidad de respuesta.
+ 
+¿Cuándo usar caching?
+Cuando manejas información que consume tiempo de calcular, procesar o conseguir, sencillo lo usas cuando quieres que todo vaya mucho más rápido
+ 
+Para usar cache en el backend se debe instalar desde la consola:
+ 
+$ pip install django-redis-cache
+$ pip install hiredis 
+En settings.py se crean los diccionarios de Cache:
+ 
+Ej.
+CACHES = {
+        'default': {
+         'BACKEND': 'redis_cache.RedisCache',
+         'LOCATION': 'localhost:6379',
+         'OPTIONS': {
+             'DB': 1,
+             # 'PASSWORD': 'yadayada',
+             'PARSER_CLASS': 'redis.connection.HiredisParser'
+         }
+      }
+}
+Nota: Para el manejo del cache se está usando REDIS
+
+1. Caching Low Level
+Para usar el cache lo importas de django.core.cache y con cache.get() – cache.set() manejas el cache de tu página a un bajo nivel
+ 
+Ej.
+from django.core.cache import cache
+ 
+frases = ['leonidas esta sentado', 'freddy se fue', 'christian esta arriba']
+ 
+def ejemplo(request):
+    frase = cache.get('frase_cool')
+        if frase is None:
+            frase = choice(frases)
+            cache.set('frase_cool', frase)
+            return {'frase': frase}  
+2. Per View
+Manejar cache per view es guardar en cache la página completa por un tiempo determinado, y esto se logra usando decoradores en las vistas de tu aplicación; se debe importar cache_page en la views.py y luego usar el decorador @cache_page(_TiempoEnCache_)
+ 
+Ej.
+from django.views.decorators.cache import cache_page
+@cache_page(6000)
+Nota: Cuando usamos caching per view si no se maneja bien, los usuarios terminan viendo información de otros usuarios, pero si no hay uso de usuarios como en un blog de noticias usar este caching es muy efectivo.
+ 
+3.  En Plantillas
+ 
+Este caching sirve para grabar en caché secciones de tu aplicación que necesitan de un tiempo de respuesta rápido y la información es estándar para todos los usuarios; este se aplica directamente en las plantillas por medio de tags.
+
+Cargas el cache, específicas el tiempo en caché, le colocas un nombre y por último cierras el caché
+ 
+Ej.
+{% load cache %}
+{% cache 6000 'enlaces_home' %}                
+<section id="contenido">
+</section>
+{% endcache %}

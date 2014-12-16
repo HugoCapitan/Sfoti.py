@@ -1,0 +1,69 @@
+¿Qué es y como crear un API REST en Django?
+
+Las APIS REST están basadas en el “Representational State Transfer” que es un tipo de arquitectura de desarrollo web apoyada en HTTP.
+
+Por esta razón las APIs utilizan los métodos de HTTP (GET, POST, PUT, DELETE). Éstas se usan para ejecutar operaciones con los datos de tu aplicación.
+
+“Lo más importante de las APIs son los recursos!”
+
+Métodos
+GET: Consultar y leer recursos
+POST: Crear recursos
+PUT: Editar recursos
+DELETE: Eliminar recursos
+ 
+Ventajas
+¿Para qué usar las APIs REST?
+-   Exponer datos a otros programas
+-   Facilitar el desarrollo del frontend
+-   Crear arquitecturas orientadas a servicios
+
+Crear una API REST
+Para crear un APIs REST, Django nos ofrece un framework con características mágicas llamado Django Rest Framework (http://django-rest-framework.org/) que debemos instalar en nuestra aplicación.
+
+Para desarrollar APIs REST hay que tener claro que los métodos HTTP son fundamentales.
+ 
+1. Para usar los datos de la aplicación en una APIs Rest  deben serializarse; en la carpeta de la aplicación se crea un archivo serializer.py (standar).
+ 
+2. Importamos a serializer.py, del framework de REST los serializers y también importamos los modelos de los cuales se van a serializar los datos
+ 
+from rest_framework import serializers
+from .models import _modelos_ 
+3. Se crean las clases que heredan de “serializers.HyperlinkedModelSerializer” y en ellas se van a definir de los modelos, los cuales son los datos que se quieren serializar
+
+Ej.
+
+class EnlaceSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Enlace
+        fields = ('url', 'titulo','enlace','votos','usuario','timestamp',) 
+4. Crear las vistas para los serializadores en views.py, estas vistas heredan de viewsset de rest_framework. Para esto se deben importar los serializers y los viewset.
+ 
+Ej.
+from .serializers import EnlaceSerializer, UserSerializer
+from rest_framework import viewsets
+class EnlaceViewSet(viewsets.ModelViewSet):
+    queryset = Enlace.objects.all()
+    serializer_class = EnlaceSerializer         
+5. Crear las urls, para esto se usa la clase Router de rest_framework.
+ 
+El uso de la clase Router es debido a que se usan ViewSets. Utilizando la clase Router puedes manejar de forma automática la conexión entre los recursos en las vistas y las urls. Todo lo que hay que hacer es registrar las vistas en un router, y dejar que haga el resto.
+ 
+Ej.
+from rest_framework import routers
+from app.views import EnlaceViewSet
+ 
+router = routers.DefaultRouter()
+router.register(r'links', EnlaceViewSet)
+ 
+urlpatterns = patterns('',
+    url(r'^api/', include(router.urls)),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+) 
+6. Instalas el ‘rest_framework’ a las aplicaciones de tu proyecto en settings.py y listo vas a la url de tu API REST y tienes lista tu API para usarla.
+ 
+Nota: Chrome como buen aliado del desarrollo Web tiene una extensión que te ayuda a administrar los recursos de tu API → REST Console. 
+
+(https://chrome.google.com/webstore/detail/rest-console/cokgbflfommojglbmbpenpphppikmonn)
+ 
+En https://www.djangopackages.com/grids/g/rest/ encontrarás paquetes que te ayudan a construir APIs REST.

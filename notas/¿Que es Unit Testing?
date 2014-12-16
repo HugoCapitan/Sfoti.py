@@ -1,0 +1,31 @@
+¿Que es Unit Testing?
+
+Un Test Unitario o Unit Testing toma las clases y módulos de tu proyecto para crear un programa que se encargará de realizar pruebas al mismo. El objetivo es confirmar que funciona y localizar errores. Al final el resultado sólo debe ser uno:  “OK”.
+
+
+
+Normalmente después de hacer test unitario a tu código pasas a hacer un test de integración en el que no pruebas partes de código sino bloques de código. Por último harás test de escenario en el que pruebas todo el proyecto en conjunto.
+
+Características de los tests unitarios
+
+* Automatizables: la idea del test unitario es consumir el mínimo de tiempo de tus desarrolladores, no debe requerir de una intervención manual cada vez que  quieras hacerlo.
+
+* Completos: deben abarcar la mayor parte de casos prueba y código.
+
+* Reutilizables: no pueden servir solo para un test, entre más reutilizables más opciones tienes para utilizarlos en test de integración.
+
+* Independientes: la ejecución de un test no debe afectar la de otro.
+
+* Profesionales: los tests deben ser documentados y desarrollados al mismo nivel que el código.
+
+Ventajas
+
+* Integración con el resto del código mucho más simplificada.
+
+* Te asegura que al integrar el código una gran parte está funcionando bien.
+
+* Te permite hacer optimizaciones de código, mejoras y cambios de una manera más fácil.
+
+* Documentan el mismo código, pues te dicen cómo funciona cada clase o modelo.
+
+* Te permite localizar los errores de manera más fácil. 

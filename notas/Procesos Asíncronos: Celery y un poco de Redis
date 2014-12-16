@@ -1,0 +1,115 @@
+Procesos Asíncronos: Celery y un poco de Redis
+
+Procesos Asíncronos 
+Manejar procesos asíncronos en el backend es una práctica muy PRO; porque al trabajar con procesos asíncronos para las tareas que requieren de mucho tiempo la velocidad de respuesta se reduce, ya que estas tareas se sacan del proceso principal y se manejan en hilos distintos.
+ 
+Es recomendable usar procesos asíncronos cuando se trabaja con:
+
+-   Envíos de correo
+-   Procesamiento de datos
+-   Cálculos pesados
+-   Procesamiento de videos, imágenes, etc.
+ 
+Nota: Para manejar los procesos asíncronos, se puede usar Celery + Redis
+
+¿Qué son Celery y REDIS?
+REDIS
+Es una base de datos no relacional (NOSQL) muy hipster que actualmente se está usando mucho por su velocidad, ya que se mantiene completamente en memoria (aunque no la guarda para siempre); REDIS trabaja a partir de llaves de valor (Key Value), a menudo lo refieren como un servidor de estructura de datos ya las llaves pueden contener secuencias, hash, listas, conjuntos y conjuntos ordenados. Y como bonus también sirve como un sistema de mensajería. (http://redis.io/)
+ 
+CELERY
+Celery - proyecto de Python; es una cola de trabajos/tareas asincrónicas basada en mensajes distribuidos. Esta se centra principalmente en las operaciones en tiempo real, pero admite también operaciones programadas.
+
+Las tareas se ejecutan al mismo tiempo en uno o varios servidores de trabajo con multiprocesamiento. Las tareas se pueden ejecutar de forma asincrónica (en segundo plano) o síncrona (espere hasta que esté listo). Celery se utiliza en los sistemas de producción para procesar millones de tareas al día. (http://www.celeryproject.org/)
+
+Gracias a Celery podemos grabar de forma efectiva las llaves de valor que se manejan en REDIS.
+ 
+Configurar los proyectos de Django para usar Celery + Redis 
+1. Instalar en nuestro proyecto celery con redis y celery para Django.
+
+$ pip install -U celery-with-redis
+$ pip install django-celery 
+2. En settings.py importar djcelery y cargarlo
+
+import djcelery
+djcelery.setup_loader() 
+3. Instalar ‘djcelery’ y ‘celerytest’ a la aplicación en INSTALLED_APPS
+ 
+Nota: Todos los ajustes que maneja celery se deben agregar a settings.py del proyecto Django. Por ejemplo, se puede configurar el ajuste BROKER_URL para especificar qué broker se va usar.
+ 
+4. Configurar el ajuste del broker como REDIS en BROKER_URL
+
+BROKER_URL = 'redis://localhost:6379/0' 
+Nota: Cuando se usa REDIS como broker o en general para hacer uso de este en nuestros proyectos, el servidor de REDIS debe estar en ejecución.
+
+Tareas
+Para definir las tareas asincrónicas se usa el decorador @task; es un estándar poner estas tareas en un módulo de nuestra aplicación llamado task.py.
+ 
+En task.py se debe importar nuestro manejador de tareas, en este caso el de Celery; y se hacer uso del decorador @task
+ 
+Ej.
+from celery import task
+ 
+@task
+def calculo():
+   j = 1
+   for i in xrange(50000):
+        if j % 2 and i:
+            j *= i
+        else:
+            j += i
+    print j 
+Estas tareas también pueden ser tareas programadas; son tareas que se implementan en un tiempo específico, y éstas usan el decorador @periodic_task, 
+ 
+Ej.
+from celery.decorators import periodic_task
+from celery.task.schedules import crontab
+ 
+@periodic_task(run_every=crontab(minute=5, hour=0))
+def calculo_periodico():
+    j = 1
+    for i in xrange(100000):
+        if j % 2 and i:
+             j *= i
+        else:
+             j += i
+        print j
+En un entorno de producción se desean ejecutar estas tareas en background (sacarlas del hilo principal de la web) para eso se hace uso del demonio de celery à celeryd, con este se va a correr el hilo ejecutor que es quien recibe las tareas en background. 
+
+Para efectos de prueba se usa desde la consola un nivel DEBUG:
+ 
+$ python manage.py celeryd --loglevel=DEBUG 
+
+Nota: Cuando se está en producción se una como loglevel = INFO
+
+Ejecutar las tareas
+
+Las tareas se llaman desde las vistas de nuestra aplicación, importando las tareas en views.py
+
+Ej.
+from .tasks import calculo
+Las tareas en las vistas se pueden llamar con .delay(), con este le digo a la tarea que se no se ejecute ahí mismo, sino en otro hilo ó .apply_async(), que recibe diversos parámetros que hacen que las tareas se ejecuten cuando se cumplan estos parámetros.
+
+Ej.
+Ejecutar rápidamente.
+
+T.delay(arg, kwarg=value)
+T.apply_async((arg, ), {'kwarg': value})
+Ejecutar en 10 segundos
+
+T.apply_async(countdown=10)
+Ejecutar en 10 segundos, usando el ETA
+
+T.apply_async(eta=now + timedelta(seconds=10))
+Ejecutar en un minuto desde ahora pero expira en 2 minutos.
+
+T.apply_async(countdown=60, expires=120)
+Expira en 2 días
+
+T.apply_async(expires=now + timedelta(days=2))
+Nota: Las tareas que están en cola y eventualmente deben expirar se liberan con “expires”; para liberar la cola de tareas que ya no necesita.
+
+Las tareas por su naturaleza, son muy difíciles de probar pero en sttings.py con djcelery se puede hacer un test agregando
+
+TEST_RUNNER = 'djcelery.contrib.test_runner.CeleryTestSuiteRunner'
+CELERY_ALWAYS_EAGER = True
+BROKER_BACKEND = 'memory'

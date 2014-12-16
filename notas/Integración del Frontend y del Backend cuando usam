@@ -1,0 +1,11 @@
+Integración del Frontend y del Backend cuando usamos Django
+
+Cuando trabajas en Django tienes que conocer dos conceptos clave al momento de integrar el frontend y backend: las vistas y los templates (o plantillas). ¿Qué son?
+
+Vistas
+Son funciones que reciben una solicitud y responden con un contenido de una página, una imagen o un error en el servidor. Estas funciones las puedes definir en tu proyecto de Django, en el archivo views.py, y contendrán toda la lógica necesaria para dar respuesta a una solicitud.
+
+Plantillas o templates
+Reciben información de la vista para mostrar el resultado de una forma mucho más organizada. El sistema de templates recibe los datos que mandas desde la vista y luego, para insertar estos datos, sólo debes ponerlo entre llaves de la siguiente forma:
+{{ nombre }}
+“nombre” será el nombre que hayas dado a la vista al momento de pasar el diccionario con los datos. Entre otras posibilidades tienes: bloques, ciclos, condiciones, filtros. Este es un sistema de templates muy parecido al sistema basado en Javascript: Swig.

@@ -1,0 +1,55 @@
+Optimizando.la
+
+Cada sitio es diferente pero existen recetas que pueden ayudar de forma genérica a optimizar los sitios.
+ 
+
+1. Debug Off
+En settings.py debes colocar el modo Debug en false, es muy sencillo pero muchas veces se olvida y esto no ayuda a la optimización de tu aplicación.
+                
+DEBUG = False
+TEMPLATE_DEBUG = DEBUG 
+2. Sesiones
+Django maneja las sesiones en una tabla en la bases de datos y cuando el sitio tiene mucho tráfico, éstas tablas tienden a colapsar. Entonces lo recomendable es el manejo de cache en las sesiones.
+ 
+Existen 2 formas usando SESSION_ENGINE
+ 
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+Esta es la más recomendada de usar porque no afecta fuertemente a la base de datos
+ 
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+Esta forma es mucho más rápida pero se corre el riesgo de perder las sesiones
+ 
+
+3. Caché de todo el sitio (Cache Everything)
+Este tipo de cache funciona muy bien para que sitios de solo lectura sean muy rápidos, en donde no se manejan usuarios registrados; y se hace usando MIDDLEWARES, en settings.py en MIDDLEWARE_CLASSES se agrega al inicio UpdateCacheMiddleware y al final de los middlewares FetchFromCacheMiddleware, y listo los MIDDLEWARE_CLASSES quedarían:
+ 
+MIDDLEWARE_CLASSES = (
+    'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'app.middleware.PaisMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
+)
+ 
+CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True 
+
+4. Cache Refresh Automatic
+Con esto se actualiza el caché  de un sitio automáticamente, haciendo uso de señales que cuando se genera un cambio se dispara la acción para guardar en memoria los cambios. Este cache se agrega en models.py
+
+Se deben importar: caché, las señales y el recibidor de las señales; las señales se manejan por medio del decorador @reciver(_Señal_)
+ 
+Ej.
+from django.core.cache import cache
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+ 
+from django.contrib.sessions.models import Session
+ 
+@receiver(post_save)
+def clear_cache(sender, **kwargs):
+    if sender != Session:
+        cache.clear() 
+Nota: El primer usuario sufre un poco, ya que es con el que se carga el caché; después de esto ya la página queda optimizada para los demás usuarios.

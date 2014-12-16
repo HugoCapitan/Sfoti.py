@@ -1,0 +1,137 @@
+Personalizar el administrador de Django
+
+Django te permite habilitar un administrador para tu aplicación. Este por defecto viene configurado de una forma muy sencilla; no quiere decir que no sea poderoso, pero Django te da la posibilidad de configurarlo a tu gusto y hacer el administrador mucho más pro de lo que ya es por defecto. Lo mejor de todo es que activar estos poderes extra es solo cuestión de conocer las propiedades y saber en dónde son útiles. Acá puedes documentarte más acerca del Admin de Django.
+ 
+Nota: si no tienes los datos para entrar al administrador no desesperes. Con manage.py puedes crear un súper usuario para acceder al administrador.
+ 
+En la consola escribes:
+
+$ python manage.py createsuperuser
+Y si olvidaste la clave:
+
+$ python manage.py changepassword _usuario_ 
+Modificar los administradores de tus modelos
+
+Cuando habilitas el administrador los administradores de tus modelos se ven así:
+
+
+
+A partir de funciones y propiedades puedes hacer que esos administradores sean mucho más específicos y con más funcionalidades; además podrás ofrecerle a tu cliente un administrador mucho más personalizado y claro para él.
+
+En admin.py creas una clase que hereda de ModelAdmin que va a ser el administrador de la vista del modelo que quieras personalizar:
+ 
+class modeloAdmin(admin.ModelAdmin): 
+En esta clase se especificarán los poderes que quieres que tenga el administrador de tu modelo, ya sean propiedades, funciones, acciones, etc. Cuando termines de modificar el ModelAdmin de tu modelo solo debes pasárselo como parámetro al register.
+ 
+admin.site.register(modelo, modeloAdmin)
+* List_Display: esta propiedad te ayuda a que la información de tu modelo sea mucho más clara, ya que te da la posibilidad de mostrarla como si fuera una tabla; solo debes pasarle los campos de tu modelo que quieres que muestre:
+
+class modeloAdmin(admin.ModelAdmin):    
+    list_display = ('titulo', 'enlace', 'categoria')            
+List_Display no solo acepta campos, también acepta funciones:
+ 
+Usar funciones en el List_Display 
+1. En models.py creas la función que quieres que haga dentro del modelo; lo que hagan las funciones está directamente relacionado con lo que tú necesitas, solo depende de tu imaginación.
+ 
+Ejemplo:
+
+Se quiere mostrar cuando un enlace es popular a partir de los votos positivos:
+ 
+class Enlace(models.Model):
+    def es_popular(self):
+        return self.votos > 10 
+Esta función te devuelve un valor booleano (True - False). Para que en el administrador se vea más claro Django por defecto muestra los booleanos con imágenes, sólo le debes activar la propiedad:
+            
+es_popular.boolean = True 
+2. En los campos de list_display pones la función:
+            
+class EnlaceAdmin(admin.ModelAdmin):     
+    list_display = ('titulo', 'enlace', 'categoria', 'es_popular')
+
+  
+¡Listo! en más o menos seis líneas de código tienes un administrador de tu modelo mucho más llamativo y claro. Los campos en el list_display tienen por defecto la función de organizarse, pero cuando el campo es el resultado de una función no tiene esta característica, entonces puedes activarle la propiedad a la función con admin_order_field y el atributo por el que lo quieras organizar.
+
+Ejemplo:
+
+es_popular.admin_order_field = 'votos'     
+* List_Filter, como su nombre lo dice, sirve para filtrar tus datos de acuerdo a lo que necesites, al igual que en list_display agregas los campos con los que quieres filtrar.
+ 
+Class modeloAdmin(admin.ModelAdmin):  
+    list_filter = ('categoria', 'usuario')
+
+* Gracias a search_fields le puedes pasar a tu ModelAdmin los campos donde quieres que busque. 
+
+Nota: cuando los campos pertenecen a otros modelos los debes poner ModeloAlQuePertenece__Campo → [ __ : Son 2 _ unidos _ _ ].
+
+Ejemplo:
+search_fields = ('categoria__titulo', 'usuario__email', 'titulo') 
+* Con List_Editabl permites que tus campos sean editables desde tu ModelAdmin sin tener que entrar a la vista de modificación. Solo debes poner los campos que quieras que sean editables. Debes tener en cuenta que esos campos también estén en el List_Display:
+ 
+class EnlaceDeAdmin(admin.ModelAdmin):
+    list_editable = ('titulo', 'enlace', 'categoria') 
+Nota: no puedes poner editables todos los campos de tu List_Display  ya que uno de estos debe ser el link del objeto; por defecto el primer campo del list_display es el que tiene el link.
+
+* List_Display_Links te permite cambiar el elemento link que se configura por defecto; debes pasar el nuevo campo del list_display que quieres que sea el link al objeto:
+
+list_display_links = ('es_popular',)
+
+
+Una vez más Django demuestra su simplicidad que hace tu trabajo como backend sea mucho más sencillo: 
+
+* Raw_Id_Fields: esta propiedad te ayuda a acelerar la página del administrador cuando hay muchos modelos asociados con demasiados registros. Es decir, en el caso de los enlaces, estos están asociados a un modelo categorías que Django por defecto pone en un lista. No hay problema cuando son pocas; pero si, por ejemplo, fueran mil, tenerlas en esa lista ya no sería muy buena idea.
+
+* Con raw_id_fields desapareces la lista y te queda como un campo de texto en donde pones el índice de la categoría, pero como Django quiere hacer tu vida más feliz te agrega un minibuscador para que puedas navegar por las categorías y que todo sea mucho más cómodo.
+
+raw_id_fields = ('categoria')
+
+
+
+* Con las propiedades Filter_Horizontal / Filter_Vertical puedes usar un filtro ya sea horizontal o vertical; sirve mucho cuando tienes que asociar a un modelo varios objetos. Sin este filter tendrías que asociarlos uno a uno.
+
+Pasas de esto:
+
+
+
+A:
+
+
+
+
+* Al usar InLines puedes administrar modelos relacionados. También hacer inception de los ModelsAdmin que están relacionados, es decir dentro del ModelAdmin de uno puedes acceder al ModelAdmin del modelo que tenga relacionado, sin tener que cambiar de administrador; teniendo en cuenta que Django por ModelAdmin maneja un solo InLine.
+
+
+1. En admin.py creas la clase del modelo que va a estar en el inline, esta clase hereda de Stackinline; adentro de la clase especificas el modelo y la cantidad de stackinlines que quieres que carguen por defecto.
+
+Ejemplo: 
+
+class EnlaceInline(admin.StackedInline):
+    model = Enlace
+    extra = 1
+2. Le asocias el modeloInline al ModelAdmin que lo va a usar con inline = [modeloInline]. Recuerda que los inlines se usan entre modelos relacionados.
+
+Ejemplo:
+
+class CategoriaAdmin(admin.ModelAdmin):
+    inlines = [EnlaceInline]
+
+
+
+Y listo ¡magia Django! desde categorías puedes agregar enlaces a una categoría sin tener que ir hasta enlaces y asociarlos.
+
+
+* En el administrador de Django están disponibles acciones (actions) que son funciones simples que consiguen llamar con una lista de los objetos seleccionados en la página de lista de cambios. La acción por defecto es seleccionar uno o varios elementos y eliminarlos. A veces necesitarás "seleccionar un objeto y hacer algo" pero hacerlo uno por uno no es muy cómodo. Django te permite crear y registrar tus propias acciones.
+
+1. Creas un archivo donde vas a programar la acción (actions.py) y lo guardas en tu proyecto; a la función le asocias una descripción con short_description.
+
+Ejemplo:
+
+export_as_csv.short_description = "Exportar como CSV"
+2. En admin.py importas las acciones para que las puedas usar y luego le asocias la acción al ModelAdmin en donde la necesites.
+
+Ejemplo:
+
+class EnlaceAdmin(admin.ModelAdmin):
+    actions = [export_as_csv]
+
+
+¡Listo! Ahora en las acciones del ModelAdmin va a aparecer la acción que creaste.

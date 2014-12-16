@@ -1,0 +1,36 @@
+Middlewares en Django
+
+Es un elemento que permite modificar globalmente el comportamiento de tu aplicación de Django, modificando la entrada y la salida.
+
+Middlewares incluidos por defecto
+-   Cache middleware: Se acuerda de las páginas y las vuelve a mostrar sin procesarlas de nuevo.
+-   "Common" middleware: Establece valores importantes para django
+-   GZip middleware: Permite que su código, cuando sale del servidor, se comprima en GZip.
+-   Conditional GET middleware: Dependiendo de las variables del HTML, te pasa un HTML o te retorna un 203 de que el HTML no se a modificado
+-   Session middleware: cuando un usuario está “loggeado”o no.
+-   Authentication middleware: Todo el sistema de autenticación.
+-   CSRF protection midddleware:  Protección de ataques en los formularios.
+-   Transaction middleware: Te permite modificar el comportamiento de una vista, para que se comparta transaccionalmente.
+-   Entre otros.
+
+Ejemplos de uso
+-   Necesitas agregarle un dato a la sesión del usuario
+-   Necesitas detectar el país de un usuario y cambiar su información acorde
+-   Necesitas agregar una variable HTTP
+-   Necesitas mostrar información según el subdominio
+
+Recuerda: El middleware afecta la entrada y la salida de un request.
+
+¿Como usarlo?
+Dentro de tu aplicación, crearemos un archivo nuevo (no importa el nombre pero normalmente usamos middleware.py) en donde colocaremos las clases del middleware, con el código que afectará ya sea el request o el response.
+
+Dentro de una clase colocamos los métodos a usar, por ejemplo:
+-   process_request: Ataca la entrada.
+-   process_response: Ataca la respuesta.
+
+En donde recibimos como parámetros a nosotros mismos (self) y el request.
+
+Luego de tener nuestras clases definidas, debemos agregar el middleware en settings.py, en la parte que dice MIDDLEWARE_CLASSES de la siguiente forma:
+
+'app.middleware.MiClase'
+Siendo app, la aplicación donde se encuentra middleware.py y MiClase, la clase que deseamos aplicar como middleware.

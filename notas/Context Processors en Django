@@ -1,0 +1,47 @@
+Context Processors en Django
+
+Es un elemento que permite agregar datos al contexto que usan las plantillas para renderizarse.
+
+Procesadores incluidos
+-   Auth
+-   debug
+-   i18n
+-   media
+-   static
+-   tz
+-   messages
+
+¿Cuándo usarlo?
+- Si quieres tener un menú y poder indicarle a la plantilla donde estas.
+- Si quieres mostrar los últimos tweets, posts de facebook, fotos de instagram, etc. en tu sitio.
+- Información que quieras mostrar en todo el sitio (frases aleatorias, indicadores globales...)
+
+¿Como usarlo?
+Debemos crear un archivo nuevo dentro de la aplicación.
+
+El nombre del archivo lo decides tú, pero lo normal es que se llame context_processors.py.
+
+Ahora crearemos una función que reciba un “request”, y que retorne un diccionario.
+
+Esto ya será un “context processors”. Ahora, debemos conectarlo a Django.
+
+Debemos ir a Settings.py y al final del documento agregaremos el siguiente codigo:
+
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
+
+TEMPLATE_CONTEXT_PROCESSORS = TCP + (
+    'app.context_processors.ejemplo',
+    'app.context_processors.menu'
+)
+Importo, de la configuración global de Django, los procesadores de contexto por defecto y lo llamo como: TCP, luego llamo a las funciones creadas en el archivo de context_processors.py.
+
+Luego, en el template, colocamos  la variable de mi “context_processor” como si tratase de un dato pasado directamente de la vista.
+
+Ahora en nuestras vistas debemos importar el shortcut "render" y reemplazaremos todos los render_to_response por render, con la siguiente estructura:
+
+return render(request, template.html, {'datos':datos})
+Debemos hacer esto, ya que render_to_response solo toma el contexto local de la función, mas no el global, es decir, excluye nuestros context processors, en cambio, render, si toma en cuenta el contexto global.
+
+Ahora, iniciamos nuestro servidor, y todo funcionara de maravilla. 
+
+Ahora no tenemos excusa para no infringir el primer principio de Django, ¡no te repitas! (DRY).

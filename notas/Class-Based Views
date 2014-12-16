@@ -1,0 +1,35 @@
+Class-Based Views
+
+¡El objetivo de las vistas basadas en clase es no repetirse!
+
+Template View: "Para renderizar una vista"
+
+¿Como uso class-based views?
+Vamos a urls.py e importamos la funcion Template View
+
+from app.views import __NombreDeClase__
+y luego definimos nuestra url de la siguiente forma:
+
+url(r'^about/$', __NombreDeClase__.as_view(), name='about')
+siendo /about la url, name=about el nombre de la url y _NombreDeClase__ será la clase que crearemos en views.py.
+
+Ahora en las vistas, importamos ListView:
+
+from django.views.generic import ListView
+Y creamos la clase con el parámetro ListView, dentro de esta colocaremos toda la lógica de la vista, de la siguiente forma:
+
+class __NombreDeClase__ (ListView):
+    model = Enlace
+    def get_template_names(sef):
+        return 'index.html'
+En donde index.html será el template a renderizar y model, serán los modelos que se tengan en cuenta para renderizar.
+
+Luego de esto, podemos ver en /about el resultado de la vista.
+
+Entre otros formatos de vista tenemos:
+-   DetailView
+-   UpdateView
+-   DeleteView
+-   FormView
+
+OJO: Son muy buenas para no repetir código, se hicieron para eso, ten clara su función antes de usarlas.

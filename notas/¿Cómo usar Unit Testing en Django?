@@ -1,0 +1,29 @@
+¿Cómo usar Unit Testing en Django?
+
+Django viene con un archivo por defecto llamado: test.py en nuestra aplicación, borraremos lo que trae y haremos nuestras pruebas aquí, el archivo debe quedar de la siguiente forma:
+
+from django.test import TestCase
+class SimpleTest(TestCase):
+    # nuestras pruebas
+Cada prueba será una función y siempre debemos empezar su nombre con test_ (es una buena práctica)  y luego el modelo a testear, además debemos recibir como parámetro a sí mismos (self).
+
+Ahora dentro de la función colocaremos la lógica de nuestra prueba unitaria teniendo en cuenta las características descritas en la lectura ¿Que es Unit Testing?.
+
+En esta función simularemos crear el modelo con:
+
+__modelo__.objects.create(parametros)
+El cual el modelo sea el nombre del mismo a testear (recuerda importarlo antes de usarlo) y los parametros seran los campos requeridos para crear el modelo.
+
+Podemos hacer confirmaciones con:
+
+self.assertEqual(__modelo__.parametro, 0)
+En donde decimos que nos asegure si en el parámetro del __modelo__ es igual a 0, si esto es cierto, la prueba está correcta.
+
+Python y Django tiene varios de estos asserts para realizar este tipo de pruebas.
+
+Pocas líneas y eficiencia, nos permite probar modelos para tener certeza de la ejecución de nuestras aplicaciones.
+
+Para ejecutar tu prueba colocamos el siguiente comando en terminal:
+
+$ python manage.py test app
+Siendo app la aplicación que deseamos testear, si el resultado es OK, todo esta perfecto, de lo contrario, tenemos un error en el código.

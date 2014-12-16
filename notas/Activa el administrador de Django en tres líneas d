@@ -1,0 +1,27 @@
+Activa el administrador de Django en tres líneas de código
+
+Django te permite habilitar un panel de administración en tan solo tres sencillos pasos: 
+
+1. En urls.py descomentas la url para habilitar el panel de administración:
+
+url(r'^admin/', include(admin.site.urls)),
+2. Instalas el administrador en settings.py, es decir en INSTALLED_APPS; descomentas la línea para instalar el administrador:
+
+'django.contrib.admin',
+3. Registras los modelos en admin.py; en la carpeta de tu aplicación creas un archivo admin.py al que importas la librería de administración y todos tus modelos; después registras los modelos a tu administrador:
+
+from django.contrib import admin
+from models import *
+admin.site.register(_Modelo1_)
+admin.site.register(_Modelo2_)
+Después escribes en la consola:
+
+$ python manage.py syncdb
+$ python manage.py runserver
+Vas a la url del administrador:
+
+http://127.0.0.1:8000/admin/
+
+¡Y ahora tienes un panel de administración en menos de cinco líneas de código!
+
+Nota: el usuario y contraseña del admin por defecto es el que creas con la base de datos.

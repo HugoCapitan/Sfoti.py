@@ -18,3 +18,7 @@ Bono Manejando archivos en amazon S3
 	AWS_SECRET_ACCES_KEY = ..
 	STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
+Celery
+	
+	Abrir hilo con celery:
+	 ./manage.py celeryd --loglevel=DEBUG

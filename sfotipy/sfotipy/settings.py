@@ -40,6 +40,21 @@ TEMPLATE_CONTEXT_PROCESSORS = TCP +(
 
 GRAPPELLI_ADMIN_TITLE = 'Sfotipy'
 
+MEDIA_ROOT = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-2] + ['media'])
+STATIC_ROOT = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-2] + ['content'])
+MEDIA_URL = '/media/'
+# Para no darle TAN duro a la db
+# SESSION_ENGINE = 'django.contrib.sessions.backends.cache_db'
+
+# Aun mas -- si no les importa que se pierda la sesion
+# Sin problemas usando redis
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+
+import djcelery
+djcelery.setup_loader()
+
+BROKER_URL = 'redis://localhost:6379/0'
+
 INSTALLED_APPS = (
     'grappelli',
     'django.contrib.admin',
@@ -55,8 +70,9 @@ INSTALLED_APPS = (
     'mockups',
     'django_extensions',
     'rest_framework',
-    'redis_cache',
-    
+    # 'redis_cache',
+    'djcelery',
+    'sorl.thumbnail',
 )
 
 CACHES = {
@@ -121,20 +137,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-
-# Para no darle TAN duro a la db
-# SESSION_ENGINE = 'django.contrib.sessions.backends.cache_db'
-
-# Aun mas -- si no les importa que se pierda la sesion
-# Sin problemas usando redis
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.CachedStaticFilesStorage'
-
-MEDIA_ROOT = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-2] + ['media'])
-STATIC_ROOT = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-2] + ['content'])
-
-MEDIA_URL = '/media/'
 
 # Backends
 # AUTHENTICATION_BACKENDS = (

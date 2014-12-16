@@ -1,0 +1,40 @@
+Archivos Estáticos
+
+Es claro que los archivos estáticos son más de la parte del Frontend que del Backend; pero Django ayuda a manejar los archivos estáticos de tu aplicación, como Javascript, imágenes, CSS, etc.
+
+Cada aplicación puede manejar sus propios archivos estáticos, esto hace que sean más manejables y reutilizables.
+ 
+Nota: Nunca servir los archivos estáticos de la aplicación desde el mismo servidor donde esta Django. A menos que uses https://github.com/kennethreitz/dj-static 
+ 
+En las plantillas html5, se acostumbra escribir las rutas directas a los archivos estáticos como:
+ 
+<link rel="stylesheet" href="/static/responsive.css" /> 
+Esto NO es recomendable, NUNCA hacerlo de esta forma; porque las rutas de los archivos estáticos pueden cambiar y si están directas toca modificar todas las rutas, lo que sería un dolor de cabeza.
+ 
+Una opción es usar {{STATIC_URL}}
+ 
+<link rel="stylesheet" href="{{STATIC_URL}}responsive.css" /> 
+Pero esta forma es floja, funciona como una opción pero es una solución floja.
+ 
+*La mejor opción es usar el template tag  {% static "estilos.css"%}" y CollectStatic
+ 
+{% load static from staticfiles %}
+<link rel="stylesheet" href="{% static "estilos.css" %}" /> 
+Con collectstatic llevas todos los archivos estáticos a una carpeta, y él se encarga de actualizar las nuevas rutas; para hacerlo desde la consola escribes:
+ 
+$ python manage.py collectstatic 
+Cache de los archivos estáticos 
+Es muy útil utilizar el cache con tus archivos estáticos, porque evitas que tus usuarios tengan que andar recargando la página o en el peor de los casos à Ctrl+F5 - Command+R.
+ 
+1. En settings.py colocar DEBUG  = False
+
+2. Usar STATICFILES_STORAGE en settings.py
+
+STATICFILES_STORAGE ='django.contrib.staticfiles.storage.CachedStaticFilesStorage'
+3. Estar usando en las plantillas el templatetag
+
+4. Hacer desde la consola collectstatic
+ 
+En 4 sencillos pasos se optimizó el manejo de los archivos estáticos de tu aplicación y no más (tantos) Ctrl+F5 - Command+R
+
+Nota: Otra opción para el manejo de los archivos estáticos es usar Amazon S3 (http://aws.amazon.com/es/s3/)
