@@ -1,0 +1,7 @@
+You can start and stop redis with these commands (the number depends on the port you set during the installation. 6379 is the default port setting):
+
+sudo service redis_6379 start
+sudo service redis_6379 stop
+You can then access the redis database by typing the following command:
+
+redis-cli
